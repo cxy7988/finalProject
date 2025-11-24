@@ -1,5 +1,3 @@
-package CPS2232.finalProject;
-
 import java.io.*;
 import java.util.*;
 

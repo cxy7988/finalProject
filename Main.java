@@ -1,5 +1,3 @@
-package CPS2232.finalProject;
-
 import java.util.List;
 import java.util.Scanner;
 
@@ -7,12 +5,15 @@ import java.util.Scanner;
  * Main类：程序入口，提供命令行用户界面
  */
 public class Main {
+    private static final String DATA_FILE = "data.csv";
     private static RatingSystem system = new RatingSystem();
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         System.out.println("欢迎使用课程与教授评分系统！");
         System.out.println("Welcome to Course & Professor Rating System!");
+        System.out.println("\n正在从 " + DATA_FILE + " 加载数据...");
+        system.loadFromFile(DATA_FILE);
 
         boolean running = true;
         while (running) {
@@ -21,31 +22,32 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    loadDataFromFile();
-                    break;
-                case 2:
                     addNewCourse();
                     break;
-                case 3:
+                case 2:
                     addNewRating();
                     break;
-                case 4:
+                case 3:
                     searchByCourseId();
                     break;
-                case 5:
+                case 4:
                     searchByCourseName();
                     break;
-                case 6:
+                case 5:
                     searchByProfessorName();
                     break;
-                case 7:
+                case 6:
                     showProfessorRanking();
                     break;
-                case 8:
+                case 7:
                     saveDataToFile();
+                    break;
+                case 8:
+                    loadDataFromFile();
                     break;
                 case 0:
                     running = false;
+                    saveDataToFile();
                     System.out.println("感谢使用，再见！");
                     break;
                 default:
@@ -61,15 +63,15 @@ public class Main {
      */
     private static void showMenu() {
         System.out.println("\n===== Course & Professor Rating System =====");
-        System.out.println("1. 从文件加载数据 (Load data from file)");
-        System.out.println("2. 添加新课程 (Add new course)");
-        System.out.println("3. 添加新评价 (Add new rating)");
-        System.out.println("4. 按课程ID查询 (Search by course ID)");
-        System.out.println("5. 按课程名查询 (Search by course name)");
-        System.out.println("6. 按教授姓名查询 (Search by professor name)");
-        System.out.println("7. 显示教授排名 (Show professor ranking)");
-        System.out.println("8. 保存数据到文件 (Save data to file)");
-        System.out.println("0. 退出 (Exit)");
+        System.out.println("1. 添加新课程 (Add new course)");
+        System.out.println("2. 添加新评价 (Add new rating)");
+        System.out.println("3. 按课程ID查询 (Search by course ID)");
+        System.out.println("4. 按课程名查询 (Search by course name)");
+        System.out.println("5. 按教授姓名查询 (Search by professor name)");
+        System.out.println("6. 显示教授排名 (Show professor ranking)");
+        System.out.println("7. 保存数据 (Save data)");
+        System.out.println("8. 重新加载数据 (Reload data)");
+        System.out.println("0. 退出并保存 (Exit and save)");
         System.out.print("请选择操作 (Please choose an option): ");
     }
 
@@ -96,16 +98,16 @@ public class Main {
     }
 
     /**
-     * 功能1：从文件加载数据
+     * 从data.csv重新加载数据
      */
     private static void loadDataFromFile() {
-        System.out.print("请输入文件名 (例如: data.csv): ");
-        String filename = scanner.nextLine().trim();
-        system.loadFromFile(filename);
+        System.out.println("正在从 " + DATA_FILE + " 重新加载数据...");
+        system = new RatingSystem();
+        system.loadFromFile(DATA_FILE);
     }
 
     /**
-     * 功能2：添加新课程
+     * 添加新课程
      */
     private static void addNewCourse() {
         System.out.print("请输入课程编号 (例如: CPS1231): ");
@@ -118,7 +120,7 @@ public class Main {
     }
 
     /**
-     * 功能3：添加新评价
+     * 添加新评价
      */
     private static void addNewRating() {
         System.out.print("请输入课程编号: ");
@@ -145,7 +147,7 @@ public class Main {
     }
 
     /**
-     * 功能4：按课程ID查询（使用二分查找）
+     * 按课程ID查询（使用二分查找）
      */
     private static void searchByCourseId() {
         System.out.print("请输入课程编号: ");
@@ -161,7 +163,7 @@ public class Main {
     }
 
     /**
-     * 功能5：按课程名查询（使用线性查找）
+     * 按课程名查询（使用线性查找）
      */
     private static void searchByCourseName() {
         System.out.print("请输入课程名关键字: ");
@@ -190,7 +192,7 @@ public class Main {
     }
 
     /**
-     * 功能6：按教授姓名查询
+     * 按教授姓名查询
      */
     private static void searchByProfessorName() {
         System.out.print("请输入教授姓名: ");
@@ -206,7 +208,7 @@ public class Main {
     }
 
     /**
-     * 功能7：显示教授排名（使用选择排序）
+     * 显示教授排名（使用选择排序）
      */
     private static void showProfessorRanking() {
         System.out.println("\n请选择排名方式：");
@@ -288,12 +290,11 @@ public class Main {
     }
 
     /**
-     * 功能8：保存数据到文件
+     * 保存数据到data.csv
      */
     private static void saveDataToFile() {
-        System.out.print("请输入保存的文件名 (例如: output.csv): ");
-        String filename = scanner.nextLine().trim();
-        system.saveToFile(filename);
+        System.out.println("正在保存数据到 " + DATA_FILE + "...");
+        system.saveToFile(DATA_FILE);
     }
 }
 

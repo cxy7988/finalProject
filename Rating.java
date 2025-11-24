@@ -1,5 +1,3 @@
-package CPS2232.finalProject;
-
 /**
  * Rating类：表示一条评分记录
  * 包含评分分数和评论内容

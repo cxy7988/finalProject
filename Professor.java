@@ -1,5 +1,3 @@
-package CPS2232.finalProject;
-
 import java.util.ArrayList;
 import java.util.List;
 
