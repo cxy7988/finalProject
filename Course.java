@@ -8,6 +8,7 @@ import java.util.List;
 public class Course {
     private String courseId;                            // 课程编号
     private String courseName;                          // 课程名称
+    private String courseIntro;
     private List<CourseProfessor> professorList;        // 该课程的所有教授及其评分
 
     /**
@@ -15,9 +16,10 @@ public class Course {
      * @param courseId 课程编号
      * @param courseName 课程名称
      */
-    public Course(String courseId, String courseName) {
+    public Course(String courseId, String courseName, String courseIntro) {
         this.courseId = courseId;
         this.courseName = courseName;
+        this.courseIntro = courseIntro;
         this.professorList = new ArrayList<>();
     }
 
@@ -35,6 +37,14 @@ public class Course {
 
     public void setCourseName(String courseName) {
         this.courseName = courseName;
+    }
+
+    public String getCourseIntro() {
+        return courseIntro;
+    }
+
+    public void setCourseIntro(String courseIntro) {
+        this.courseIntro = courseIntro;
     }
 
     public List<CourseProfessor> getProfessorList() {
