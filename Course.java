@@ -8,13 +8,14 @@ import java.util.List;
 public class Course {
     private String courseId;                            // 课程编号
     private String courseName;                          // 课程名称
-    private String courseIntro;
+    private String courseIntro;                         // 课程介绍
     private List<CourseProfessor> professorList;        // 该课程的所有教授及其评分
 
     /**
      * 构造方法
      * @param courseId 课程编号
      * @param courseName 课程名称
+     * @param courseIntro 课程介绍
      */
     public Course(String courseId, String courseName, String courseIntro) {
         this.courseId = courseId;
