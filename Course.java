@@ -97,8 +97,9 @@ public class Course {
     @Override
     public String toString() {
         return String.format("[%s] %s - 平均分: %.2f", 
-                           courseId, 
-                           courseName, 
+                           courseId,
+                           courseName,
+                            courseIntro,
                            getOverallAverageRating());
     }
 }
