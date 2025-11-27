@@ -3,7 +3,7 @@
 
 ## 1. Introduction（简介）
 - 项目背景与目标简述
-- 系统名称：**Course & Professor Rating and information retrieval System**
+- 系统名称：**Course & Professor Rating and Information Retrieval System**
 - 功能概览：课程/教授信息维护、评价录入、查询与排名
 
 ---
