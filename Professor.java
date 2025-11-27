@@ -43,7 +43,7 @@ public class Professor {
      * 遍历所有授课记录，计算所有评分的平均值
      * @return 总体平均评分
      */
-    public double getOverallAverageRatingOfProfessor() {
+    public double getOverallAverageRating() {
         if (teaching.isEmpty()) {
             return 0.0;
         }
@@ -64,7 +64,7 @@ public class Professor {
 
     @Override
     public String toString() {
-        return String.format("教授: %s, 总体平均分: %.2f", name, getOverallAverageRatingOfProfessor());
+        return String.format("教授: %s, 总体平均分: %.2f", name, getOverallAverageRating());
     }
 }
 
