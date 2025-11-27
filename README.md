@@ -27,32 +27,31 @@
 
 ### 3.1 使用的数据结构类型
 
-- `HashMap`
-HashMap<String, Course> courseMap
-HashMap<String, Professor> professorMap
-HashMap<String, CourseProfessor> courseProfessorMap
--示例：键（key）：课程编号 `courseId`，例如 `"CPS1231"
-      值（value）：对应的 `Course` 对象
-  
-- `List`
--`ArrayList<Course> courseList`
+- **`HashMap`**
+
+  - `HashMap<String, Course> courseMap`
+  - `HashMap<String, Professor> professorMap`
+  - `HashMap<String, CourseProfessor> courseProfessorMap`
+
+  示例：
+  - 键（key）：课程编号 `courseId`，例如 `"CPS1231"`
+  - 值（value）：对应的 `Course` 对象
+
+- **`List`**
+
+  - `ArrayList<Course> courseList`
     - 存储系统中所有课程的顺序列表
-          
-- `List<CourseProfessor>`
+
+  - `List<CourseProfessor>`
     - 作为 `Course` 的数据域
     - 对于每门课程，使用 `List<CourseProfessor>` 保存该课程下的所有教授及其评分信息
     - 当用户按课程查询时，从这个列表中取出所有教授并进行排序，得到“该课程下教授评分排名”
 
-- `List<Rating>`
-    - 作为 `CourseProfessor`的数据域
+  - `List<Rating>`
+    - 作为 `CourseProfessor` 的数据域
     - 保存某门课上某位教授的全部评分记录
     - 用于计算该课程-教授组合的平均分
 
-> 说明：
-> - 整个系统的对外接口以“课程查询”为主，所以把**课程编号 → Course 对象**放在 `HashMap` 里作为主索引，比用教授名字做主索引更符合使用场景。
-> - 关于教授维度的查询，可以通过遍历所有课程及其 `CourseProfessor` 列表实现
-
----
 
 ### 3.2 选择这些数据结构的原因
 
