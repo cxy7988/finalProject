@@ -237,32 +237,25 @@ public class RatingSystem {
         return professorList;
     }
 
-    /**
-     * 选择排序算法实现
-     * 按CourseProfessor的平均评分从高到低排序
-     * @param list 待排序的列表
-     */
-    private void selectionSortByRating(List<CourseProfessor> list) {
-        int n = list.size();
+   /**
+ * 插入排序：按 CourseProfessor 的平均评分从高到低排序
+ */
+private void insertionSortByRating(List<CourseProfessor> list) {
+    for (int i = 1; i < list.size(); i++) {
 
-        for (int i = 0; i < n - 1; i++) {
-            int maxIndex = i;
+        CourseProfessor key = list.get(i);
+        double keyRating = key.getAverageRating();
+        int j = i - 1;
 
-            // 在[i, n-1]区间找到最大平均评分的下标
-            for (int j = i + 1; j < n; j++) {
-                if (list.get(j).getAverageRating() > list.get(maxIndex).getAverageRating()) {
-                    maxIndex = j;
-                }
-            }
-
-            // 交换
-            if (maxIndex != i) {
-                CourseProfessor temp = list.get(i);
-                list.set(i, list.get(maxIndex));
-                list.set(maxIndex, temp);
-            }
+        // 将评分更低的往右移动（高分在前）
+        while (j >= 0 && list.get(j).getAverageRating() < keyRating) {
+            list.set(j + 1, list.get(j));
+            j--;
         }
+
+        list.set(j + 1, key);
     }
+}
 
     /**
      * 获取全局教授排名
@@ -272,38 +265,33 @@ public class RatingSystem {
     public List<Professor> getOverallProfessorRanking() {
         List<Professor> professorList = new ArrayList<>(professorMap.values());
 
-        // 选择排序：按总体平均评分从高到低
-        selectionSortProfessors(professorList);
+        // 插入排序：按总体平均评分从高到低
+        insertionSortByRating(List<CourseProfessor> list);
 
         return professorList;
     }
 
     /**
-     * 选择排序算法实现（教授版本）
+     * 插入排序算法实现（教授版本）
      * 按Professor的总体平均评分从高到低排序
      * @param list 待排序的列表
      */
-    private void selectionSortProfessors(List<Professor> list) {
-        int n = list.size();
+private void insertionSortProfessors(List<Professor> list) {
+    for (int i = 1; i < list.size(); i++) {
 
-        for (int i = 0; i < n - 1; i++) {
-            int maxIndex = i;
+        Professor key = list.get(i);
+        double keyRating = key.getOverallAverageRating();
+        int j = i - 1;
 
-            // 在[i, n-1]区间找到最大总体平均评分的下标
-            for (int j = i + 1; j < n; j++) {
-                if (list.get(j).getOverallAverageRating() > list.get(maxIndex).getOverallAverageRating()) {
-                    maxIndex = j;
-                }
-            }
-
-            // 交换
-            if (maxIndex != i) {
-                Professor temp = list.get(i);
-                list.set(i, list.get(maxIndex));
-                list.set(maxIndex, temp);
-            }
+        // 高分在前 → 低分往右移
+        while (j >= 0 && list.get(j).getOverallAverageRating() < keyRating) {
+            list.set(j + 1, list.get(j));
+            j--;
         }
+
+        list.set(j + 1, key);
     }
+}
 
     /**
      * 显示课程详细信息
