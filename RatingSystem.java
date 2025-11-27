@@ -231,8 +231,8 @@ public class RatingSystem {
 
         List<CourseProfessor> professorList = new ArrayList<>(course.getProfessorList());
 
-        // 选择排序：按平均评分从高到低
-        selectionSortByRating(professorList);
+        // 插入排序：按平均评分从高到低
+        insertionSortByRating(professorList);
 
         return professorList;
     }
@@ -266,8 +266,8 @@ private void insertionSortByRating(List<CourseProfessor> list) {
         List<Professor> professorList = new ArrayList<>(professorMap.values());
 
         // 插入排序：按总体平均评分从高到低
-        insertionSortByRating(List<CourseProfessor> list);
-
+        insertionSortProfessors(professorList);
+        
         return professorList;
     }
 
