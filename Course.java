@@ -14,7 +14,6 @@ public class Course {
      * 构造方法
      * @param courseId 课程编号
      * @param courseName 课程名称
-     * @param courseIntro 课程介绍
      */
     public Course(String courseId, String courseName) {
         this.courseId = courseId;
