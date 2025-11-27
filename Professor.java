@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class Professor {
     private String name;                                    // 教授姓名
-    private List<Course> courseList;                 // 该教授授课的课程列表
+    private List<CourseProfessor> teaching;                // 该教授授课的课程列表
 
     /**
      * 构造方法
@@ -15,7 +15,7 @@ public class Professor {
      */
     public Professor(String name) {
         this.name = name;
-        this.courseList = new ArrayList<>();
+        this.teaching = new ArrayList<>();
     }
 
     public String getName() {
@@ -26,8 +26,8 @@ public class Professor {
         this.name = name;
     }
 
-    public List<Course> getCourseList() {
-        return courseList;
+    public List<CourseProfessor> getTeaching() {
+        return teaching;
     }
 
     /**
@@ -64,7 +64,7 @@ public class Professor {
 
     @Override
     public String toString() {
-        return String.format("教授: %s, 总体平均分: %.2f", name, getOverallAverageRating());
+        return String.format("教授: %s, 总体平均分: %.2f", name, getOverallAverageRatingOfProfessor());
     }
 }
 
