@@ -27,7 +27,7 @@
 
 ### 3.1 使用的数据结构类型
 
-- **`HashMap`**
+- **`Map`**
 
   - `HashMap<String, Course> courseMap`
   - `HashMap<String, Professor> professorMap`
