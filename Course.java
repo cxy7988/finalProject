@@ -18,7 +18,6 @@ public class Course {
     public Course(String courseId, String courseName) {
         this.courseId = courseId;
         this.courseName = courseName;
-        this.courseIntro = courseIntro;
         this.professorList = new ArrayList<>();
     }
 
