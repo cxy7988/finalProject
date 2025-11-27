@@ -10,17 +10,16 @@ public class Main {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        System.out.println("欢迎使用课程与教授评分系统！");
         System.out.println("Welcome to Course & Professor Rating System!");
-        System.out.println("\n正在从 " + DATA_FILE + " 加载数据...");
         system.loadFromFile(DATA_FILE);
 
         boolean running = true;
         while (running) {
-            showMenu();
-            int choice = getIntInput();
+            try {
+                showMenu();
+                int choice = getIntInput();
 
-            switch (choice) {
+                switch (choice) {
                 case 1:
                     addNewCourse();
                     break;
@@ -48,10 +47,14 @@ public class Main {
                 case 0:
                     running = false;
                     saveDataToFile();
-                    System.out.println("感谢使用，再见！");
+                    System.out.println("Thanks for using! Goodbye!");
                     break;
                 default:
-                    System.out.println("无效选项，请重新选择！");
+                    System.out.println("Invalid option, please try again!");
+            }
+            } catch (Exception e) {
+                System.out.println("Error occurred: " + e.getMessage());
+                System.out.println("Please try again!");
             }
         }
 
@@ -63,16 +66,16 @@ public class Main {
      */
     private static void showMenu() {
         System.out.println("\n===== Course & Professor Rating System =====");
-        System.out.println("1. 添加新课程 (Add new course)");
-        System.out.println("2. 添加新评价 (Add new rating)");
-        System.out.println("3. 按课程ID查询 (Search by course ID)");
-        System.out.println("4. 按课程名查询 (Search by course name)");
-        System.out.println("5. 按教授姓名查询 (Search by professor name)");
-        System.out.println("6. 显示教授排名 (Show professor ranking)");
-        System.out.println("7. 保存数据 (Save data)");
-        System.out.println("8. 重新加载数据 (Reload data)");
-        System.out.println("0. 退出并保存 (Exit and save)");
-        System.out.print("请选择操作 (Please choose an option): ");
+        System.out.println("1. Add new course");
+        System.out.println("2. Add new rating");
+        System.out.println("3. Search by course ID");
+        System.out.println("4. Search by course name");
+        System.out.println("5. Search by professor name");
+        System.out.println("6. Show professor ranking");
+        System.out.println("7. Save data");
+        System.out.println("8. Reload data");
+        System.out.println("0. Exit and save");
+        System.out.print("Please choose an option: ");
     }
 
     /**
@@ -101,7 +104,7 @@ public class Main {
      * 从data.csv重新加载数据
      */
     private static void loadDataFromFile() {
-        System.out.println("正在从 " + DATA_FILE + " 重新加载数据...");
+        System.out.println("Loading data...");
         system = new RatingSystem();
         system.loadFromFile(DATA_FILE);
     }
@@ -110,10 +113,10 @@ public class Main {
      * 添加新课程
      */
     private static void addNewCourse() {
-        System.out.print("请输入课程编号 (例如: CPS1231): ");
+        System.out.print("Enter course ID (e.g., CPS1231): ");
         String courseId = scanner.nextLine().trim();
 
-        System.out.print("请输入课程名称 (例如: Java Programming): ");
+        System.out.print("Enter course name (e.g., Java Programming): ");
         String courseName = scanner.nextLine().trim();
 
         system.addCourse(courseId, courseName);
@@ -123,24 +126,24 @@ public class Main {
      * 添加新评价
      */
     private static void addNewRating() {
-        System.out.print("请输入课程编号: ");
+        System.out.print("Enter course ID: ");
         String courseId = scanner.nextLine().trim();
 
-        System.out.print("请输入课程名称: ");
+        System.out.print("Enter course name: ");
         String courseName = scanner.nextLine().trim();
 
-        System.out.print("请输入教授姓名: ");
+        System.out.print("Enter professor name: ");
         String professorName = scanner.nextLine().trim();
 
-        System.out.print("请输入评分 (0-5): ");
+        System.out.print("Enter rating (0-5): ");
         double score = getDoubleInput();
 
         if (score < 0 || score > 5) {
-            System.out.println("评分必须在0-5之间！");
+            System.out.println("Rating must be between 0 and 5!");
             return;
         }
 
-        System.out.print("请输入评论: ");
+        System.out.print("Enter comment: ");
         String comment = scanner.nextLine().trim();
 
         system.addRating(courseId, courseName, professorName, score, comment);
@@ -150,13 +153,13 @@ public class Main {
      * 按课程ID查询（使用二分查找）
      */
     private static void searchByCourseId() {
-        System.out.print("请输入课程编号: ");
+        System.out.print("Enter course ID: ");
         String courseId = scanner.nextLine().trim();
 
         Course course = system.searchCourseById(courseId);
 
         if (course == null) {
-            System.out.println("未找到课程编号为 " + courseId + " 的课程！");
+            System.out.println("Course with ID " + courseId + " not found!");
         } else {
             system.displayCourseDetails(course);
         }
@@ -166,15 +169,15 @@ public class Main {
      * 按课程名查询（使用线性查找）
      */
     private static void searchByCourseName() {
-        System.out.print("请输入课程名关键字: ");
+        System.out.print("Enter course name keyword: ");
         String keyword = scanner.nextLine().trim();
 
         List<Course> results = system.searchCoursesByName(keyword);
 
         if (results.isEmpty()) {
-            System.out.println("未找到包含 \"" + keyword + "\" 的课程！");
+            System.out.println("No courses found containing \"" + keyword + "\"!");
         } else {
-            System.out.println("\n找到 " + results.size() + " 门课程：");
+            System.out.println("\nFound " + results.size() + " course(s):");
             for (int i = 0; i < results.size(); i++) {
                 System.out.println((i + 1) + ". " + results.get(i));
             }
@@ -182,7 +185,7 @@ public class Main {
             if (results.size() == 1) {
                 system.displayCourseDetails(results.get(0));
             } else {
-                System.out.print("\n请输入要查看详情的课程序号 (输入0跳过): ");
+                System.out.print("\nEnter the course number to view details (0 to skip): ");
                 int choice = getIntInput();
                 if (choice > 0 && choice <= results.size()) {
                     system.displayCourseDetails(results.get(choice - 1));
@@ -195,13 +198,13 @@ public class Main {
      * 按教授姓名查询
      */
     private static void searchByProfessorName() {
-        System.out.print("请输入教授姓名: ");
+        System.out.print("Enter professor name: ");
         String name = scanner.nextLine().trim();
 
         Professor professor = system.searchProfessorByName(name);
 
         if (professor == null) {
-            System.out.println("未找到姓名为 " + name + " 的教授！");
+            System.out.println("Professor named " + name + " not found!");
         } else {
             system.displayProfessorDetails(professor);
         }
@@ -211,10 +214,10 @@ public class Main {
      * 显示教授排名（使用选择排序）
      */
     private static void showProfessorRanking() {
-        System.out.println("\n请选择排名方式：");
-        System.out.println("1. 全局教授排名");
-        System.out.println("2. 某门课程内教授排名");
-        System.out.print("请选择: ");
+        System.out.println("\nPlease choose ranking type:");
+        System.out.println("1. Overall professor ranking");
+        System.out.println("2. Professor ranking within a course");
+        System.out.print("Please choose: ");
 
         int choice = getIntInput();
 
@@ -223,7 +226,7 @@ public class Main {
         } else if (choice == 2) {
             showCourseSpecificProfessorRanking();
         } else {
-            System.out.println("无效选项！");
+            System.out.println("Invalid option!");
         }
     }
 
@@ -234,12 +237,12 @@ public class Main {
         List<Professor> ranking = system.getOverallProfessorRanking();
 
         if (ranking.isEmpty()) {
-            System.out.println("暂无教授数据！");
+            System.out.println("No professor data available!");
             return;
         }
 
-        System.out.println("\n======== 全局教授排名 ========");
-        System.out.print("显示前几名？(输入0显示全部): ");
+        System.out.println("\n======== Overall Professor Ranking ========");
+        System.out.print("Show top how many? (Enter 0 to show all): ");
         int topN = getIntInput();
 
         if (topN <= 0 || topN > ranking.size()) {
@@ -248,8 +251,8 @@ public class Main {
 
         for (int i = 0; i < topN; i++) {
             Professor p = ranking.get(i);
-            System.out.printf("%d. %s - 平均分: %.2f%n", 
-                            i + 1, 
+            System.out.printf("%d. %s - Average: %.2f%n",
+                            i + 1,
                             p.getName(), 
                             p.getOverallAverageRating());
         }
@@ -259,29 +262,29 @@ public class Main {
      * 显示某门课程内教授排名
      */
     private static void showCourseSpecificProfessorRanking() {
-        System.out.print("请输入课程编号: ");
+        System.out.print("Enter course ID: ");
         String courseId = scanner.nextLine().trim();
 
         Course course = system.searchCourseById(courseId);
 
         if (course == null) {
-            System.out.println("未找到课程编号为 " + courseId + " 的课程！");
+            System.out.println("Course with ID " + courseId + " not found!");
             return;
         }
 
         List<CourseProfessor> ranking = system.getProfessorRankingInCourse(courseId);
 
         if (ranking.isEmpty()) {
-            System.out.println("该课程暂无教授评价数据！");
+            System.out.println("No professor rating data for this course!");
             return;
         }
 
-        System.out.println("\n======== 课程 [" + course.getCourseId() + "] " + 
-                         course.getCourseName() + " 教授排名 ========");
+        System.out.println("\n======== Course [" + course.getCourseId() + "] " +
+                         course.getCourseName() + " Professor Ranking ========");
 
         for (int i = 0; i < ranking.size(); i++) {
             CourseProfessor cp = ranking.get(i);
-            System.out.printf("%d. %s - 平均分: %.2f (%d条评价)%n",
+            System.out.printf("%d. %s - Average: %.2f (%d ratings)%n",
                             i + 1,
                             cp.getProfessor().getName(),
                             cp.getAverageRating(),
@@ -293,7 +296,7 @@ public class Main {
      * 保存数据到data.csv
      */
     private static void saveDataToFile() {
-        System.out.println("正在保存数据到 " + DATA_FILE + "...");
+        System.out.println("Saving data to " + DATA_FILE + "...");
         system.saveToFile(DATA_FILE);
     }
 }
