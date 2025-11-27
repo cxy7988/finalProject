@@ -133,7 +133,7 @@
         - 使用经典二分查找，对 `courseId` 比较大小
 - 时间复杂度：O(log n)
 
-### 4.3 插入排序（Insertion Sort，用于实时插入教授评分）
+### 4.3 Insertion Sort（插入排序，用于实时插入教授评分）
 
 - **用途**：当课程内有新教授加入或对已有教授评分更新时，将这些变动实时插入排序，以保持教授评分的顺序更新。
 - **数据结构**：`List<CourseProfessor>`（来自 `course.getProfessorList()`）
