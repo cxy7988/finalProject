@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class Professor {
     private String name;                                    // 教授姓名
-    private List<CourseProfessor> teaching;                 // 该教授授课的课程列表
+    private List<Course> courseList;                 // 该教授授课的课程列表
 
     /**
      * 构造方法
@@ -15,7 +15,7 @@ public class Professor {
      */
     public Professor(String name) {
         this.name = name;
-        this.teaching = new ArrayList<>();
+        this.courseList = new ArrayList<>();
     }
 
     public String getName() {
@@ -26,16 +26,16 @@ public class Professor {
         this.name = name;
     }
 
-    public List<CourseProfessor> getTeaching() {
-        return teaching;
+    public List<Course> getCourseList() {
+        return courseList;
     }
 
     /**
      * 添加授课记录
      * @param courseProfessor 课程-教授关系对象
      */
-    public void addTeaching(CourseProfessor courseProfessor) {
-        this.teaching.add(courseProfessor);
+    public void addCourse(Course course) {
+        this.courseList.add(course);
     }
 
     /**
@@ -43,7 +43,7 @@ public class Professor {
      * 遍历所有授课记录，计算所有评分的平均值
      * @return 总体平均评分
      */
-    public double getOverallAverageRating() {
+    public double getOverallAverageRatingOfProfessor() {
         if (teaching.isEmpty()) {
             return 0.0;
         }
@@ -51,8 +51,8 @@ public class Professor {
         double totalScore = 0.0;
         int totalCount = 0;
 
-        for (CourseProfessor cp : teaching) {
-            List<Rating> ratings = cp.getRatings();
+        for (Course c : courseList) {
+            List<Rating> ratings = c.getRatings();
             for (Rating rating : ratings) {
                 totalScore += rating.getScore();
                 totalCount++;
