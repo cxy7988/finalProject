@@ -34,8 +34,8 @@ public class Professor {
      * 添加授课记录
      * @param courseProfessor 课程-教授关系对象
      */
-    public void addCourse(Course course) {
-        this.courseList.add(course);
+    public void addTeaching(CourseProfessor courseProfessor) {
+        this.teaching.add(courseProfessor);
     }
 
     /**
