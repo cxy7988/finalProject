@@ -87,6 +87,15 @@ public class CourseProfessor {
     }
 
     /**
+     * 返回当前教授在本课程下的所有评价数量
+     */
+    public int getRatingCount() {
+        // ratingList 是存储所有评分的列表
+        // 如果没有评分，ratingList 可能为 empty，但不为 null（你应该在构造方法里初始化）
+        return ratingList.size();
+    }
+
+    /**
      * 返回易读的文本描述，格式如：
      * "Alice teaches Java Programming (Avg Rating: 4.50)"
      */
