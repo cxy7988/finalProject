@@ -89,7 +89,6 @@ public class Course {
         return String.format("[%s] %s - 平均分: %.2f", 
                            courseId,
                            courseName,
-                            courseIntro,
                            getOverallAverageRating());
     }
 }
