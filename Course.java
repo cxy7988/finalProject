@@ -47,7 +47,7 @@ public class Course {
      * @param professor 教授对象
      * @return CourseProfessor对象
      */
-    public CourseProfessor getOrCreateCourseProfessor(Course course, Professor professor) {
+    public CourseProfessor getOrCreateCourseProfessor(Professor professor) {
         // 查找是否已存在该教授
         for (CourseProfessor cp : professorList) {
             if (cp.getProfessor().getName().equals(professor.getName())) {
@@ -56,7 +56,7 @@ public class Course {
         }
 
         // 不存在则创建新的
-        CourseProfessor newCp = new CourseProfessor(course, professor);
+        CourseProfessor newCp = new CourseProfessor(this, professor);
         professorList.add(newCp);
         professor.addTeaching(newCp);  // 双向关联
         return newCp;

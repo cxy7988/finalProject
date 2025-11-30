@@ -51,8 +51,8 @@ public class Professor {
         double totalScore = 0.0;
         int totalCount = 0;
 
-        for (Course c : courseList) {
-            List<Rating> ratings = c.getRatings();
+        for (CourseProfessor cp : teaching) {
+            List<Rating> ratings = cp.getRatings();
             for (Rating rating : ratings) {
                 totalScore += rating.getScore();
                 totalCount++;

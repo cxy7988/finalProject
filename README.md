@@ -271,3 +271,9 @@
 - 对每条 `Rating` 写一行 CSV
 - 输出文件如 `output.csv`
 
+
+### 代码更新日志
+1.0.1 
+修复Professor类中getOverallAverageRating()方法的实现，使用teaching列表而不是courseList列表；
+getOrCreateCourseProfessor 方法不应该接收 course 参数，因为它已经是 Course 类的成员方法；
+Rating System.java缺少判定：addcourse和addrating可能存在输入评分大于5的情况，已添加判断

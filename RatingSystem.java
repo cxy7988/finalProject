@@ -25,6 +25,16 @@ public class RatingSystem {
      * @param courseName 课程名称
      */
     public void addCourse(String courseId, String courseName) {
+        // 验证输入
+        if (courseId == null || courseId.trim().isEmpty()) {
+            System.out.println("错误：课程编号不能为空！");
+            return;
+        }
+        if (courseName == null || courseName.trim().isEmpty()) {
+            System.out.println("错误：课程名称不能为空！");
+            return;
+        }
+        
         if (courseMap.containsKey(courseId)) {
             System.out.println("课程 " + courseId + " 已存在！");
             return;
@@ -78,6 +88,26 @@ public class RatingSystem {
      */
     public void addRating(String courseId, String courseName, String professorName, 
                          double score, String comment) {
+        // 验证输入
+        if (courseId == null || courseId.trim().isEmpty()) {
+            System.out.println("错误：课程编号不能为空！");
+            return;
+        }
+        if (courseName == null || courseName.trim().isEmpty()) {
+            System.out.println("错误：课程名称不能为空！");
+            return;
+        }
+        if (professorName == null || professorName.trim().isEmpty()) {
+            System.out.println("错误：教授姓名不能为空！");
+            return;
+        }
+        
+        // 验证评分范围
+        if (score < 0 || score > 5) {
+            System.out.println("错误：评分必须在0-5之间！当前评分: " + score);
+            return;
+        }
+        
         // 获取或创建课程和教授
         Course course = getOrCreateCourse(courseId, courseName);
         Professor professor = getOrCreateProfessor(professorName);
