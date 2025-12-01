@@ -6,15 +6,15 @@ import java.util.*;
  * 负责数据管理、查询、排序等核心功能
  */
 public class RatingSystem {
-    private List<Course> courses;                       // 课程列表（支持遍历、排序）
-    private Map<String, Course> courseMap;              // 课程映射（快速查找）
+    private CourseAVLTree courseTree;                   // AVL树存储课程（按名称排序，快速查找）
+    private Map<String, Course> courseMap;              // 课程映射（按ID快速查找）
     private Map<String, Professor> professorMap;        // 教授映射（快速查找）
 
     /**
      * 构造方法
      */
     public RatingSystem() {
-        this.courses = new ArrayList<>();
+        this.courseTree = new CourseAVLTree();
         this.courseMap = new HashMap<>();
         this.professorMap = new HashMap<>();
     }
@@ -41,7 +41,7 @@ public class RatingSystem {
         }
 
         Course course = new Course(courseId, courseName);
-        courses.add(course);
+        courseTree.insert(course);
         courseMap.put(courseId, course);
         System.out.println("成功添加课程: " + course);
     }
@@ -73,7 +73,7 @@ public class RatingSystem {
         }
 
         Course course = new Course(courseId, courseName);
-        courses.add(course);
+        courseTree.insert(course);
         courseMap.put(courseId, course);
         return course;
     }
@@ -170,7 +170,8 @@ public class RatingSystem {
             // 写入表头
             pw.println("courseId,courseName,professorName,rating,comment");
 
-            // 遍历所有课程
+            // 遍历所有课程（使用AVL树的中序遍历，按名称排序）
+            List<Course> courses = courseTree.getAllCoursesSorted();
             for (Course course : courses) {
                 for (CourseProfessor cp : course.getProfessorList()) {
                     for (Rating rating : cp.getRatings()) {
@@ -191,51 +192,22 @@ public class RatingSystem {
     }
 
     /**
-     * 线性查找：按课程名关键字搜索
+     * AVL树查找：按课程名关键字搜索
+     * 利用AVL树的有序性进行优化查找
      * @param keyword 关键字
      * @return 匹配的课程列表
      */
     public List<Course> searchCoursesByName(String keyword) {
-        List<Course> results = new ArrayList<>();
-
-        for (Course course : courses) {
-            if (course.getCourseName().toLowerCase().contains(keyword.toLowerCase())) {
-                results.add(course);
-            }
-        }
-
-        return results;
+        return courseTree.searchByName(keyword);
     }
 
     /**
-     * 二分查找：按课程ID精确查找
-     * 前提：courses列表必须按courseId排序
+     * HashMap查找：按课程ID精确查找（O(1)时间复杂度）
      * @param courseId 课程编号
      * @return 找到的课程，未找到返回null
      */
     public Course searchCourseById(String courseId) {
-        // 先对courses按courseId排序
-        courses.sort(Comparator.comparing(Course::getCourseId));
-
-        // 二分查找
-        int left = 0;
-        int right = courses.size() - 1;
-
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
-            Course midCourse = courses.get(mid);
-            int cmp = midCourse.getCourseId().compareTo(courseId);
-
-            if (cmp == 0) {
-                return midCourse;  // 找到
-            } else if (cmp < 0) {
-                left = mid + 1;    // 在右半部分
-            } else {
-                right = mid - 1;   // 在左半部分
-            }
-        }
-
-        return null;  // 未找到
+        return courseMap.get(courseId);
     }
 
     /**
@@ -369,6 +341,7 @@ private void insertionSortProfessors(List<Professor> list) {
 
         for (CourseProfessor cp : professor.getTeaching()) {
             // 需要找到对应的课程
+            List<Course> courses = courseTree.getAllCoursesSorted();
             Course course = null;
             for (Course c : courses) {
                 if (c.getProfessorList().contains(cp)) {
@@ -388,8 +361,29 @@ private void insertionSortProfessors(List<Professor> list) {
         }
     }
 
+    /**
+     * 获取所有课程（按名称排序）
+     * @return 课程列表
+     */
     public List<Course> getCourses() {
-        return courses;
+        return courseTree.getAllCoursesSorted();
+    }
+
+    /**
+     * 按首字母查找课程
+     * @param letter 首字母
+     * @return 匹配的课程列表
+     */
+    public List<Course> searchCoursesByFirstLetter(char letter) {
+        return courseTree.searchByFirstLetter(letter);
+    }
+
+    /**
+     * 获取课程总数
+     * @return 课程数量
+     */
+    public int getCourseCount() {
+        return courseTree.size();
     }
 
     public Map<String, Professor> getProfessorMap() {

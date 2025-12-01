@@ -1,9 +1,4 @@
 courseId,courseName,professorName,rating,comment
-CPS1231,Java Programming,Dr. Smith,4.5,Very clear explanation
-CPS1231,Java Programming,Dr. Smith,4.8,Excellent teaching style
-CPS1231,Java Programming,Dr. Johnson,3.5,Assignments are difficult
-CPS1231,Java Programming,Dr. Johnson,4.0,Good course materials
-CPS1231,Java Programming,Dr. Lee,4.2,Very helpful during office hours
 MATH2413,Calculus I,Dr. Lee,3.8,Homework is heavy
 MATH2413,Calculus I,Dr. Lee,4.0,Clear explanations
 MATH2413,Calculus I,Dr. Brown,4.5,Great professor
@@ -14,8 +9,12 @@ CPS2232,Data Structures,Dr. Wang,4.3,Good examples in class
 CPS2232,Data Structures,Dr. Wang,4.1,Reasonable workload
 ENG1301,English Composition,Dr. Davis,3.9,Helpful feedback on essays
 ENG1301,English Composition,Dr. Davis,4.2,Engaging discussions
+CPS1231,Java Programming,Dr. Smith,4.5,Very clear explanation
+CPS1231,Java Programming,Dr. Smith,4.8,Excellent teaching style
+CPS1231,Java Programming,Dr. Johnson,3.5,Assignments are difficult
+CPS1231,Java Programming,Dr. Johnson,4.0,Good course materials
+CPS1231,Java Programming,Dr. Lee,4.2,Very helpful during office hours
 PHYS2325,University Physics,Dr. Brown,4.4,Clear demonstrations
 PHYS2325,University Physics,Dr. Brown,4.6,Well organized lectures
 PHYS2325,University Physics,Dr. Martinez,3.7,Fast paced course
 PHYS2325,University Physics,Dr. Martinez,3.9,Good lab sessions
-

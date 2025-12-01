@@ -27,11 +27,17 @@
 
 ### 3.1 使用的数据结构类型
 
+- **`AVL树`**（新增）
+
+  - `CourseAVLTree courseTree`
+  - AVL树是一种自平衡二叉搜索树
+  - 按课程名称的字典序进行排序存储
+  - 提供 O(log n) 的插入和查找时间复杂度
+
 - **`Map`**
 
   - `HashMap<String, Course> courseMap`
   - `HashMap<String, Professor> professorMap`
-  - `HashMap<String, CourseProfessor> courseProfessorMap`
 
   示例：
   - 键（key）：课程编号 `courseId`，例如 `"CPS1231"`
@@ -39,13 +45,10 @@
 
 - **`List`**
 
-  - `ArrayList<Course> courseList`
-    - 存储系统中所有课程的顺序列表
-
   - `List<CourseProfessor>`
     - 作为 `Course` 的数据域
     - 对于每门课程，使用 `List<CourseProfessor>` 保存该课程下的所有教授及其评分信息
-    - 当用户按课程查询时，从这个列表中取出所有教授并进行排序，得到“该课程下教授评分排名”
+    - 当用户按课程查询时，从这个列表中取出所有教授并进行排序，得到"该课程下教授评分排名"
 
   - `List<Rating>`
     - 作为 `CourseProfessor` 的数据域
@@ -55,29 +58,32 @@
 
 ### 3.2 选择这些数据结构的原因
 
+- `CourseAVLTree`（AVL树）
+    - 优点：
+        - 自平衡性质保证了树的高度始终为 O(log n)
+        - 插入、删除、查找操作的时间复杂度均为 O(log n)
+        - 中序遍历自然得到按名称排序的课程列表
+        - 相比线性查找，在数据量较大时性能优势明显
+    - 在本系统中，用于：
+        - 按课程名称的字典序存储所有课程
+        - 快速查找包含特定关键字的课程
+        - 按首字母快速筛选课程
+        - 获取按名称排序的课程列表
+
 - `HashMap`
     - 优点：
-        - 平均查找时间复杂度为 O(1)，非常适合“按课程编号精确查找”这种高频操作
+        - 平均查找时间复杂度为 O(1)，非常适合"按课程编号精确查找"这种高频操作
         - 键值对结构清晰，便于维护和扩展
     - 在本系统中，用于：
         - 用户输入课程 ID 时，快速定位到对应的 `Course` 对象
-        - 作为“按课程查询 + 课程内教授排名”的入口
-
-- `ArrayList<Course>`
-    - 优点：
-        - 支持通过下标快速访问，适合排序和遍历
-        - 实现简单，是最常用的顺序容器之一
-    - 在本系统中，用于：
-        - 线性查找（按课程名关键字搜索）
-        - 对课程按 `courseId` 进行排序，从而支持二分查找算法
-        - 统计类功能（例如未来扩展“遍历所有课程的平均分”等）
+        - 作为"按课程查询 + 课程内教授排名"的入口
 
 - `List<CourseProfessor>`（课程内部教授列表）
     - 优点：
-        - 结构紧凑，存储“某门课下的所有教授”这一小规模集合时，线性结构足够高效
+        - 结构紧凑，存储"某门课下的所有教授"这一小规模集合时，线性结构足够高效
         - 与排序算法结合简单，可以直接对 `List<CourseProfessor>` 进行插入排序
     - 在本系统中，用于：
-        - 对某门课的所有教授按平均评分进行排序，生成“该课程下教授评分排名”
+        - 对某门课的所有教授按平均评分进行排序，生成"该课程下教授评分排名"
 
 - `List<Rating>`（评分列表）
     - 优点：
@@ -95,14 +101,19 @@
     - 使用 `HashMap<String, Course>`：平均时间复杂度 **O(1)**
 
 - 按课程名关键字搜索课程：
-    - 遍历 `ArrayList<Course>` 做线性查找：时间复杂度 **O(n)**
+    - 使用 AVL树查找：时间复杂度 **O(log n + k)**
+    - 其中 n 是课程总数，k 是匹配结果数量
+    - 利用AVL树的有序性进行剪枝优化
 
-- 对课程按编号排序以支持二分查找：
-    - 假设使用简单的 `Collections.sort`（基于快速排序或 TimSort），平均时间复杂度约为 **O(n log n)**
-    - 后续对课程 ID 使用二分查找：单次查找复杂度 **O(log n)**
+- AVL树相关操作：
+    - 插入新课程：时间复杂度 **O(log n)**
+    - 按名称精确查找：时间复杂度 **O(log n)**
+    - 按首字母查找：时间复杂度 **O(log n + k)**（k为匹配数量）
+    - 中序遍历获取排序列表：时间复杂度 **O(n)**
+    - AVL树自平衡操作（旋转）：时间复杂度 **O(1)**
 
 - 在某一门课程内部，对教授按评分进行排序：
-    - 对 `List<CourseProfessor>` 使用自定义选择排序：
+    - 对 `List<CourseProfessor>` 使用自定义插入排序：
         - 时间复杂度 **O(k²)**（k 为该课程下教授数量，一般较小）
 
 - 计算平均分：
@@ -114,39 +125,58 @@
 
 ## 4. Algorithms（算法设计）
 
-### 4.1 Linear Search（线性查找）
+### 4.1 AVL树算法（用于课程存储和查找）
 
-- 用途：根据**课程名关键字**（如 `Data`）模糊搜索课程
-- 数据结构：`ArrayList<Course>`
+#### 4.1.1 AVL树基本原理
+- AVL树是一种自平衡二叉搜索树
+- 任何节点的左右子树高度差不超过1
+- 通过旋转操作维持平衡性
+
+#### 4.1.2 AVL树的旋转操作
+- **左旋（Left Rotation）**：当右子树过高时使用
+- **右旋（Right Rotation）**：当左子树过高时使用
+- **左右旋（Left-Right Rotation）**：先左旋后右旋
+- **右左旋（Right-Left Rotation）**：先右旋后左旋
+
+#### 4.1.3 课程查找算法
+- **按课程名关键字搜索**：
+    - 利用AVL树的有序性进行优化查找
+    - 通过比较关键字与节点值进行剪枝
+    - 时间复杂度：O(log n + k)，k为匹配数量
+    
+- **按首字母查找**：
+    - 利用课程名称的字典序特性
+    - 在AVL树中快速定位首字母范围
+    - 时间复杂度：O(log n + k)
+
+- **按课程ID查找**：
+    - 使用 `HashMap<String, Course>`
+    - 时间复杂度：O(1)
+
+### 4.2 Hash查找（用于课程ID和教授名称）
+
+- 用途：根据**课程ID**或**教授名称**精确查找
+- 数据结构：`HashMap<String, Course>` 和 `HashMap<String, Professor>`
 - 实现思路：
-    - 遍历 `courses`
-    - 判断 `course.getCourseName().contains(keyword)`
-- 时间复杂度：O(n)
+    - 使用HashMap的get方法直接获取对象
+- 时间复杂度：O(1)
 
-### 4.2 Binary Search（折半查找，用于课程 ID）
+### 4.3 Insertion Sort（插入排序，用于教授评分排序）
 
-- 用途：根据**课程 ID**（如 `CPS1231`）精确查找课程
-- 前提条件：
-    - `courses` 按 `courseId` 升序排序
-- 实现思路：
-    - 实现 `Course searchCourseById(String courseId)`：
-        - 使用经典二分查找，对 `courseId` 比较大小
-- 时间复杂度：O(log n)
-
-### 4.3 Insertion Sort（插入排序，用于实时插入教授评分）
-
-- **用途**：当课程内有新教授加入或对已有教授评分更新时，将这些变动实时插入排序，以保持教授评分的顺序更新。
+- **用途**：对课程内的教授按评分进行排序
 - **数据结构**：`List<CourseProfessor>`（来自 `course.getProfessorList()`）
 - **实现思路**：
-    - 初始状态下假设 `professorList` 已按评分从高到低排序。
-    - 将新加入或更新的教授评分插入到正确的位置：
-        1. 增加或更新 `CourseProfessor` 对象到 `professorList`。
-        2. 从新元素的索引开始向前比较，找到正确的插入位置。
-        3. 逐个移动元素以腾出插入位置。
-    - 如果是更新，可以先从原位置移除教授再重新插入。
-- **时间复杂度**：最差情况下为 \(O(n²)\)，但在数据近乎有序或更新频率较低的情况下接近 \(O(n)\)。
+    - 从第二个元素开始，依次插入到前面已排序的序列中
+    - 每次插入时，从后向前比较，找到合适的位置
+    - 将评分较高的教授排在前面
+- **时间复杂度**：
+    - 最坏情况：O(n²)
+    - 最好情况：O(n)（数据已基本有序）
+    - 平均情况：O(n²)
 - **在系统中的应用场景**：
-    - 用户提交新教授或更新评分时 → 插入新或更新的评分到排序的 `professorList` → 保持评分顺序更新 → 输出更新后的**“该课程下教授评分排名”**
+    - 显示某门课程内教授的评分排名
+    - 由于每门课的教授数量通常较小，插入排序的性能表现良好
+
 
 ## 5. Class Design（类设计概述）
 
@@ -192,8 +222,10 @@
 
 - `class RatingSystem`
     - 字段：
-        - `List<Course> courses`  
-          （`ArrayList<Course>`，保存所有课程，用于遍历、排序、二分查找）
+        - `CourseAVLTree courseTree`  
+          （AVL树，按课程名称字典序存储所有课程，支持快速查找）
+        - `Map<String, Course> courseMap`  
+          （`HashMap<String, Course>`，按课程ID快速查找课程）
         - `Map<String, Professor> professorMap`  
           （`HashMap<String, Professor>`，按教授姓名快速查找教授）
     - 主要方法（部分）：
@@ -205,20 +237,50 @@
             - `void saveToFile(String filename)`
         - 查询（与算法对应）：
             - `List<Course> searchCoursesByName(String keyword)`  
-              （线性查找：遍历 `courses`，筛选 `courseName` 包含关键字）
+              （AVL树查找：利用树的有序性进行优化查找）
             - `Course searchCourseById(String courseId)`  
-              （二分查找：在按 `courseId` 排好序的 `courses` 中查找）
+              （HashMap查找：O(1)时间复杂度直接获取）
             - `Professor searchProfessorByName(String name)`  
               （通过 `professorMap.get(name)` 直接获取）
+            - `List<Course> searchCoursesByFirstLetter(char letter)`  
+              （按首字母查找：利用AVL树的有序性快速定位）
 
         - 排序与排名：
             - `List<CourseProfessor> getProfessorRankingInCourse(String courseId)`
-                1. 使用二分查找找到课程
+                1. 使用HashMap找到课程（O(1)）
                 2. 拿到 `course.getProfessorList()`
-                3. 调用自定义 **选择排序**，按 `CourseProfessor.getAverageRating()` 从高到低排序
+                3. 调用自定义**插入排序**，按 `CourseProfessor.getAverageRating()` 从高到低排序
                 4. 返回排好序的列表，用于 UI 展示
-            - `List<Professor> getOverallProfessorRanking()`（可选）  
-              对所有教授按 `getOverallAverageRating()` 进行选择排序，得到全局教授排行榜
+            - `List<Professor> getOverallProfessorRanking()`  
+              对所有教授按 `getOverallAverageRating()` 进行插入排序，得到全局教授排行榜
+            - `List<Course> getCourses()`  
+              返回按名称排序的所有课程列表（AVL树中序遍历）
+
+- `class CourseAVLTree`（新增）
+    - 字段：
+        - `AVLNode root`（树的根节点）
+    - 主要方法：
+        - `void insert(Course course)`  
+          插入课程，自动维持AVL树平衡
+        - `List<Course> searchByName(String keyword)`  
+          按关键字搜索课程
+        - `Course searchByExactName(String courseName)`  
+          精确名称查找
+        - `Course searchById(String courseId)`  
+          按ID查找（需遍历整棵树）
+        - `List<Course> searchByFirstLetter(char letter)`  
+          按首字母查找
+        - `List<Course> getAllCoursesSorted()`  
+          中序遍历返回排序列表
+        - `int size()`  
+          返回树中课程数量
+
+- `class AVLNode`（新增）
+    - 字段：
+        - `Course course`（存储的课程对象）
+        - `AVLNode left`（左子节点）
+        - `AVLNode right`（右子节点）
+        - `int height`（节点高度）
 
 ---
 
@@ -273,7 +335,20 @@
 
 
 ### 代码更新日志
-1.0.1 
-修复Professor类中getOverallAverageRating()方法的实现，使用teaching列表而不是courseList列表；
-getOrCreateCourseProfessor 方法不应该接收 course 参数，因为它已经是 Course 类的成员方法；
-Rating System.java缺少判定：addcourse和addrating可能存在输入评分大于5的情况，已添加判断
+
+#### 1.0.2 (最新版本)
+- **重大更新**：使用AVL树替代ArrayList存储课程
+    - 新增 `CourseAVLTree` 类和 `AVLNode` 类
+    - 实现AVL树的插入、平衡和旋转操作
+    - 支持按课程名称字典序自动排序
+    - 查找性能从 O(n) 提升到 O(log n)
+- **优化**：改进课程查找算法
+    - 按名称关键字搜索：利用AVL树有序性进行剪枝优化
+    - 新增按首字母查找功能
+    - 课程ID查找改用HashMap，时间复杂度为O(1)
+- **改进**：文件保存时自动按课程名称排序输出
+
+#### 1.0.1
+- 修复Professor类中getOverallAverageRating()方法的实现，使用teaching列表而不是courseList列表
+- getOrCreateCourseProfessor方法不应该接收course参数，因为它已经是Course类的成员方法
+- RatingSystem.java缺少判定：addcourse和addrating可能存在输入评分大于5的情况，已添加判断
