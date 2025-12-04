@@ -11,8 +11,7 @@
 ## 2. System Overview（系统概览）
 - 数据维护（Add / Update 部分）
     - 从 CSV 文件加载课程、教授、评价信息
-    - 手动添加新课程 / 新教授
-    - 为某课程某教授添加一条新的评价（评分 + 简短评论）
+    - 为某课程某教授添加一条新的评价（评分 + 简短评论），如果课程或教授不存在则自动创建
     - 保存当前数据到文件（CSV）
 
 - 数据查询（Query 部分） 
@@ -230,8 +229,8 @@
           （`HashMap<String, Professor>`，按教授姓名快速查找教授）
     - 主要方法（部分）：
         - 数据维护：
-            - `void addCourse(String id, String name)`
             - `void addRating(String courseId, String courseName, String professorName, double score, String comment)`
+              （添加评分，如果课程或教授不存在则自动创建）
         - 文件读写：
             - `void loadFromFile(String filename)`
             - `void saveToFile(String filename)`
@@ -292,15 +291,14 @@
 ### 6.2 菜单结构示例
 
     ===== Course & Professor Rating System =====
-    1. Load data from file
-    2. Add new course
-    3. Add new rating
-    4. Search by course ID
-    5. Search by course name (keyword)
-    6. Search by professor name
-    7. Show professor ranking
-    8. Save data to file
-    0. Exit
+    1. Add new rating
+    2. Search by course ID
+    3. Search by course name
+    4. Search by professor name
+    5. Show professor ranking
+    6. Save data
+    7. Reload data
+    0. Exit and save
     Please choose an option:
 
 ### 6.3 示例交互流程
@@ -336,7 +334,14 @@
 
 ### 代码更新日志
 
-#### 1.0.2 (最新版本)
+#### 1.0.3 (最新版本)
+- **移除功能**：删除独立的 `addCourse` 功能
+    - 为保持CSV数据结构的一致性，每条记录必须包含完整的5个字段
+    - 现在通过 `addRating` 添加评分时会自动创建不存在的课程和教授
+- **简化菜单**：菜单选项从9个减少到8个
+- **代码清理**：移除 `Main.java` 中的 `addNewCourse()` 方法和 `RatingSystem.java` 中的 `addCourse()` 方法
+
+#### 1.0.2
 - **重大更新**：使用AVL树替代ArrayList存储课程
     - 新增 `CourseAVLTree` 类和 `AVLNode` 类
     - 实现AVL树的插入、平衡和旋转操作

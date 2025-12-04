@@ -20,33 +20,6 @@ public class RatingSystem {
     }
 
     /**
-     * 添加新课程
-     * @param courseId 课程编号
-     * @param courseName 课程名称
-     */
-    public void addCourse(String courseId, String courseName) {
-        // 验证输入
-        if (courseId == null || courseId.trim().isEmpty()) {
-            System.out.println("错误：课程编号不能为空！");
-            return;
-        }
-        if (courseName == null || courseName.trim().isEmpty()) {
-            System.out.println("错误：课程名称不能为空！");
-            return;
-        }
-        
-        if (courseMap.containsKey(courseId)) {
-            System.out.println("课程 " + courseId + " 已存在！");
-            return;
-        }
-
-        Course course = new Course(courseId, courseName);
-        courseTree.insert(course);
-        courseMap.put(courseId, course);
-        System.out.println("成功添加课程: " + course);
-    }
-
-    /**
      * 获取或创建教授对象
      * @param professorName 教授姓名
      * @return Professor对象
@@ -88,23 +61,23 @@ public class RatingSystem {
      */
     public void addRating(String courseId, String courseName, String professorName, 
                          double score, String comment) {
-        // 验证输入
+        // Validate input
         if (courseId == null || courseId.trim().isEmpty()) {
-            System.out.println("错误：课程编号不能为空！");
+            System.out.println("Error: Course ID cannot be empty!");
             return;
         }
         if (courseName == null || courseName.trim().isEmpty()) {
-            System.out.println("错误：课程名称不能为空！");
+            System.out.println("Error: Course name cannot be empty!");
             return;
         }
         if (professorName == null || professorName.trim().isEmpty()) {
-            System.out.println("错误：教授姓名不能为空！");
+            System.out.println("Error: Professor name cannot be empty!");
             return;
         }
         
-        // 验证评分范围
+        // Validate rating range
         if (score < 0 || score > 5) {
-            System.out.println("错误：评分必须在0-5之间！当前评分: " + score);
+            System.out.println("Error: Rating must be between 0-5! Current rating: " + score);
             return;
         }
         
@@ -119,7 +92,7 @@ public class RatingSystem {
         Rating rating = new Rating(score, comment);
         cp.addRating(rating);
 
-        System.out.println("成功添加评分！");
+        System.out.println("Rating added successfully!");
     }
 
     /**
@@ -151,13 +124,13 @@ public class RatingSystem {
                 }
             }
 
-            System.out.println("成功从文件 " + filename + " 加载数据！");
+            System.out.println("Data loaded successfully from file: " + filename);
         } catch (FileNotFoundException e) {
-            System.out.println("文件未找到: " + filename);
+            System.out.println("File not found: " + filename);
         } catch (IOException e) {
-            System.out.println("读取文件时发生错误: " + e.getMessage());
+            System.out.println("Error reading file: " + e.getMessage());
         } catch (NumberFormatException e) {
-            System.out.println("评分格式错误: " + e.getMessage());
+            System.out.println("Rating format error: " + e.getMessage());
         }
     }
 
@@ -185,9 +158,9 @@ public class RatingSystem {
                 }
             }
 
-            System.out.println("成功保存数据到文件: " + filename);
+            System.out.println("Data saved successfully to file: " + filename);
         } catch (IOException e) {
-            System.out.println("保存文件时发生错误: " + e.getMessage());
+            System.out.println("Error saving file: " + e.getMessage());
         }
     }
 
@@ -300,23 +273,23 @@ private void insertionSortProfessors(List<Professor> list) {
      * @param course 课程对象
      */
     public void displayCourseDetails(Course course) {
-        System.out.println("\n======== 课程详细信息 ========");
-        System.out.println("课程编号: " + course.getCourseId());
-        System.out.println("课程名称: " + course.getCourseName());
-        System.out.println("总体平均分: " + String.format("%.2f", course.getOverallAverageRating()));
-        System.out.println("\n授课教授及评价：");
+        System.out.println("\n======== Course Details ========");
+        System.out.println("Course ID: " + course.getCourseId());
+        System.out.println("Course Name: " + course.getCourseName());
+        System.out.println("Overall Average Rating: " + String.format("%.2f", course.getOverallAverageRating()));
+        System.out.println("\nProfessors and Ratings:");
 
         List<CourseProfessor> rankedProfessors = getProfessorRankingInCourse(course.getCourseId());
 
         if (rankedProfessors.isEmpty()) {
-            System.out.println("暂无评价数据");
+            System.out.println("No rating data available");
             return;
         }
 
         int rank = 1;
         for (CourseProfessor cp : rankedProfessors) {
             System.out.println(rank + ". " + cp);
-            System.out.println("   评论：");
+            System.out.println("   Comments:");
             for (Rating rating : cp.getRatings()) {
                 System.out.println("   - " + rating);
             }
@@ -329,18 +302,18 @@ private void insertionSortProfessors(List<Professor> list) {
      * @param professor 教授对象
      */
     public void displayProfessorDetails(Professor professor) {
-        System.out.println("\n======== 教授详细信息 ========");
-        System.out.println("教授姓名: " + professor.getName());
-        System.out.println("总体平均分: " + String.format("%.2f", professor.getOverallAverageRating()));
-        System.out.println("\n授课信息：");
+        System.out.println("\n======== Professor Details ========");
+        System.out.println("Professor Name: " + professor.getName());
+        System.out.println("Overall Average Rating: " + String.format("%.2f", professor.getOverallAverageRating()));
+        System.out.println("\nCourses Teaching:");
 
         if (professor.getTeaching().isEmpty()) {
-            System.out.println("暂无授课数据");
+            System.out.println("No course data available");
             return;
         }
 
         for (CourseProfessor cp : professor.getTeaching()) {
-            // 需要找到对应的课程
+            // Find the corresponding course
             List<Course> courses = courseTree.getAllCoursesSorted();
             Course course = null;
             for (Course c : courses) {
@@ -351,9 +324,9 @@ private void insertionSortProfessors(List<Professor> list) {
             }
 
             if (course != null) {
-                System.out.println("\n课程: [" + course.getCourseId() + "] " + course.getCourseName());
-                System.out.println("该课程平均分: " + String.format("%.2f", cp.getAverageRating()));
-                System.out.println("评论：");
+                System.out.println("\nCourse: [" + course.getCourseId() + "] " + course.getCourseName());
+                System.out.println("Course Average Rating: " + String.format("%.2f", cp.getAverageRating()));
+                System.out.println("Comments:");
                 for (Rating rating : cp.getRatings()) {
                     System.out.println("  - " + rating);
                 }

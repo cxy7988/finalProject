@@ -35,7 +35,7 @@ public class Rating {
 
     @Override
     public String toString() {
-        return String.format("评分: %.1f, 评论: %s", score, comment);
+        return String.format("[%.1f] %s", score, comment);
     }
 }
 
