@@ -2,7 +2,7 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * Main类：程序入口，提供命令行用户界面
+ * Main class: Program entry point, provides command-line user interface
  */
 public class Main {
     private static final String DATA_FILE = "data.csv";
@@ -21,27 +21,24 @@ public class Main {
 
                 switch (choice) {
                 case 1:
-                    addNewCourse();
-                    break;
-                case 2:
                     addNewRating();
                     break;
-                case 3:
+                case 2:
                     searchByCourseId();
                     break;
-                case 4:
+                case 3:
                     searchByCourseName();
                     break;
-                case 5:
+                case 4:
                     searchByProfessorName();
                     break;
-                case 6:
+                case 5:
                     showProfessorRanking();
                     break;
-                case 7:
+                case 6:
                     saveDataToFile();
                     break;
-                case 8:
+                case 7:
                     loadDataFromFile();
                     break;
                 case 0:
@@ -62,24 +59,23 @@ public class Main {
     }
 
     /**
-     * 显示主菜单
+     * Display main menu
      */
     private static void showMenu() {
         System.out.println("\n===== Course & Professor Rating System =====");
-        System.out.println("1. Add new course");
-        System.out.println("2. Add new rating");
-        System.out.println("3. Search by course ID");
-        System.out.println("4. Search by course name");
-        System.out.println("5. Search by professor name");
-        System.out.println("6. Show professor ranking");
-        System.out.println("7. Save data");
-        System.out.println("8. Reload data");
+        System.out.println("1. Add new rating");
+        System.out.println("2. Search by course ID");
+        System.out.println("3. Search by course name");
+        System.out.println("4. Search by professor name");
+        System.out.println("5. Show professor ranking");
+        System.out.println("6. Save data");
+        System.out.println("7. Reload data");
         System.out.println("0. Exit and save");
         System.out.print("Please choose an option: ");
     }
 
     /**
-     * 获取整数输入
+     * Get integer input
      */
     private static int getIntInput() {
         try {
@@ -90,7 +86,7 @@ public class Main {
     }
 
     /**
-     * 获取浮点数输入
+     * Get double input
      */
     private static double getDoubleInput() {
         try {
@@ -101,7 +97,7 @@ public class Main {
     }
 
     /**
-     * 从data.csv重新加载数据
+     * Reload data from data.csv
      */
     private static void loadDataFromFile() {
         System.out.println("Loading data...");
@@ -110,20 +106,7 @@ public class Main {
     }
 
     /**
-     * 添加新课程
-     */
-    private static void addNewCourse() {
-        System.out.print("Enter course ID (e.g., CPS1231): ");
-        String courseId = scanner.nextLine().trim();
-
-        System.out.print("Enter course name (e.g., Java Programming): ");
-        String courseName = scanner.nextLine().trim();
-
-        system.addCourse(courseId, courseName);
-    }
-
-    /**
-     * 添加新评价
+     * Add new rating
      */
     private static void addNewRating() {
         System.out.print("Enter course ID: ");
@@ -150,7 +133,7 @@ public class Main {
     }
 
     /**
-     * 按课程ID查询（使用二分查找）
+     * Search by course ID (using HashMap lookup)
      */
     private static void searchByCourseId() {
         System.out.print("Enter course ID: ");
@@ -166,7 +149,7 @@ public class Main {
     }
 
     /**
-     * 按课程名查询（使用线性查找）
+     * Search by course name (using AVL tree search)
      */
     private static void searchByCourseName() {
         System.out.print("Enter course name keyword: ");
@@ -195,7 +178,7 @@ public class Main {
     }
 
     /**
-     * 按教授姓名查询
+     * Search by professor name
      */
     private static void searchByProfessorName() {
         System.out.print("Enter professor name: ");
@@ -211,7 +194,7 @@ public class Main {
     }
 
     /**
-     * 显示教授排名（使用选择排序）
+     * Show professor ranking (using insertion sort)
      */
     private static void showProfessorRanking() {
         System.out.println("\nPlease choose ranking type:");
@@ -231,7 +214,7 @@ public class Main {
     }
 
     /**
-     * 显示全局教授排名
+     * Show overall professor ranking
      */
     private static void showOverallProfessorRanking() {
         List<Professor> ranking = system.getOverallProfessorRanking();
@@ -259,7 +242,7 @@ public class Main {
     }
 
     /**
-     * 显示某门课程内教授排名
+     * Show professor ranking within a specific course
      */
     private static void showCourseSpecificProfessorRanking() {
         System.out.print("Enter course ID: ");
@@ -293,11 +276,10 @@ public class Main {
     }
 
     /**
-     * 保存数据到data.csv
+     * Save data to data.csv
      */
     private static void saveDataToFile() {
         System.out.println("Saving data to " + DATA_FILE + "...");
         system.saveToFile(DATA_FILE);
     }
 }
-

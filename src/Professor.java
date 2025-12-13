@@ -2,16 +2,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Professor类：表示一位教授
- * 维护该教授授课的所有课程信息
+ * Professor class: Represents a professor
+ * Maintains all course information taught by this professor
  */
 public class Professor {
-    private String name;                                    // 教授姓名
-    private List<CourseProfessor> teaching;                // 该教授授课的课程列表
+    private String name;                                    // Professor name
+    private List<CourseProfessor> teaching;                // List of courses taught by this professor
 
     /**
-     * 构造方法
-     * @param name 教授姓名
+     * Constructor
+     * @param name professor name
      */
     public Professor(String name) {
         this.name = name;
@@ -31,17 +31,17 @@ public class Professor {
     }
 
     /**
-     * 添加授课记录
-     * @param courseProfessor 课程-教授关系对象
+     * Add teaching record
+     * @param courseProfessor course-professor relationship object
      */
     public void addTeaching(CourseProfessor courseProfessor) {
         this.teaching.add(courseProfessor);
     }
 
     /**
-     * 计算该教授的总体平均评分
-     * 遍历所有授课记录，计算所有评分的平均值
-     * @return 总体平均评分
+     * Calculate overall average rating for this professor
+     * Traverse all teaching records and calculate average of all ratings
+     * @return overall average rating
      */
     public double getOverallAverageRating() {
         if (teaching.isEmpty()) {
@@ -64,7 +64,6 @@ public class Professor {
 
     @Override
     public String toString() {
-        return String.format("教授: %s, 总体平均分: %.2f", name, getOverallAverageRating());
+        return String.format("Professor: %s, Overall Average: %.2f", name, getOverallAverageRating());
     }
 }
-

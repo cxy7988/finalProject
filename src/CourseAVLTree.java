@@ -2,13 +2,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * AVL树节点类
+ * AVL tree node class
  */
 class AVLNode {
-    Course course;          // 存储的课程对象
-    AVLNode left;           // 左子节点
-    AVLNode right;          // 右子节点
-    int height;             // 节点高度
+    Course course;          // Stored course object
+    AVLNode left;           // Left child node
+    AVLNode right;          // Right child node
+    int height;             // Node height
 
     public AVLNode(Course course) {
         this.course = course;
@@ -19,8 +19,8 @@ class AVLNode {
 }
 
 /**
- * CourseAVLTree类：使用AVL树存储课程
- * 按照课程名称的首字母进行排序，支持快速查找
+ * CourseAVLTree class: Uses AVL tree to store courses
+ * Sorted by course name alphabetically, supports fast lookup
  */
 public class CourseAVLTree {
     private AVLNode root;
@@ -30,21 +30,21 @@ public class CourseAVLTree {
     }
 
     /**
-     * 获取节点高度
+     * Get node height
      */
     private int height(AVLNode node) {
         return node == null ? 0 : node.height;
     }
 
     /**
-     * 获取平衡因子
+     * Get balance factor
      */
     private int getBalance(AVLNode node) {
         return node == null ? 0 : height(node.left) - height(node.right);
     }
 
     /**
-     * 更新节点高度
+     * Update node height
      */
     private void updateHeight(AVLNode node) {
         if (node != null) {
@@ -53,17 +53,17 @@ public class CourseAVLTree {
     }
 
     /**
-     * 右旋转
+     * Right rotation
      */
     private AVLNode rotateRight(AVLNode y) {
         AVLNode x = y.left;
         AVLNode T2 = x.right;
 
-        // 执行旋转
+        // Perform rotation
         x.right = y;
         y.left = T2;
 
-        // 更新高度
+        // Update heights
         updateHeight(y);
         updateHeight(x);
 
@@ -71,17 +71,17 @@ public class CourseAVLTree {
     }
 
     /**
-     * 左旋转
+     * Left rotation
      */
     private AVLNode rotateLeft(AVLNode x) {
         AVLNode y = x.right;
         AVLNode T2 = y.left;
 
-        // 执行旋转
+        // Perform rotation
         y.left = x;
         x.right = T2;
 
-        // 更新高度
+        // Update heights
         updateHeight(x);
         updateHeight(y);
 
@@ -89,15 +89,15 @@ public class CourseAVLTree {
     }
 
     /**
-     * 插入课程
-     * 按课程名称的字典序排序
+     * Insert course
+     * Sorted by course name in lexicographic order
      */
     public void insert(Course course) {
         root = insertNode(root, course);
     }
 
     private AVLNode insertNode(AVLNode node, Course course) {
-        // 标准BST插入
+        // Standard BST insertion
         if (node == null) {
             return new AVLNode(course);
         }
@@ -109,33 +109,33 @@ public class CourseAVLTree {
         } else if (cmp > 0) {
             node.right = insertNode(node.right, course);
         } else {
-            // 课程名称相同，不插入
+            // Same course name, do not insert
             return node;
         }
 
-        // 更新高度
+        // Update height
         updateHeight(node);
 
-        // 获取平衡因子
+        // Get balance factor
         int balance = getBalance(node);
 
-        // 左左情况
+        // Left-Left case
         if (balance > 1 && course.getCourseName().compareToIgnoreCase(node.left.course.getCourseName()) < 0) {
             return rotateRight(node);
         }
 
-        // 右右情况
+        // Right-Right case
         if (balance < -1 && course.getCourseName().compareToIgnoreCase(node.right.course.getCourseName()) > 0) {
             return rotateLeft(node);
         }
 
-        // 左右情况
+        // Left-Right case
         if (balance > 1 && course.getCourseName().compareToIgnoreCase(node.left.course.getCourseName()) > 0) {
             node.left = rotateLeft(node.left);
             return rotateRight(node);
         }
 
-        // 右左情况
+        // Right-Left case
         if (balance < -1 && course.getCourseName().compareToIgnoreCase(node.right.course.getCourseName()) < 0) {
             node.right = rotateRight(node.right);
             return rotateLeft(node);
@@ -145,8 +145,8 @@ public class CourseAVLTree {
     }
 
     /**
-     * 按课程名称关键字搜索
-     * 利用AVL树的有序性进行优化查找
+     * Search by course name keyword
+     * Utilizes AVL tree ordering for optimized lookup
      */
     public List<Course> searchByName(String keyword) {
         List<Course> results = new ArrayList<>();
@@ -162,25 +162,25 @@ public class CourseAVLTree {
 
         String courseName = node.course.getCourseName().toLowerCase();
         
-        // 如果当前课程名包含关键字，加入结果
+        // If current course name contains keyword, add to results
         if (courseName.contains(keyword)) {
             results.add(node.course);
         }
 
-        // 利用AVL树的有序性进行剪枝
-        // 如果关键字小于当前节点课程名，可能在左子树
+        // Prune using AVL tree ordering
+        // If keyword is less than current node course name, may be in left subtree
         if (keyword.compareTo(courseName) <= 0 || courseName.contains(keyword) || keyword.length() < courseName.length()) {
             searchByNameHelper(node.left, keyword, results);
         }
         
-        // 如果关键字大于当前节点课程名，可能在右子树
+        // If keyword is greater than current node course name, may be in right subtree
         if (keyword.compareTo(courseName) >= 0 || courseName.contains(keyword) || keyword.length() < courseName.length()) {
             searchByNameHelper(node.right, keyword, results);
         }
     }
 
     /**
-     * 按课程名称精确查找
+     * Search by exact course name
      */
     public Course searchByExactName(String courseName) {
         return searchByExactNameHelper(root, courseName);
@@ -203,8 +203,8 @@ public class CourseAVLTree {
     }
 
     /**
-     * 按课程ID查找
-     * 由于AVL树是按名称排序的，这里需要遍历整个树
+     * Search by course ID
+     * Since AVL tree is sorted by name, this requires traversing the entire tree
      */
     public Course searchById(String courseId) {
         return searchByIdHelper(root, courseId);
@@ -219,18 +219,18 @@ public class CourseAVLTree {
             return node.course;
         }
 
-        // 先查左子树
+        // Search left subtree first
         Course leftResult = searchByIdHelper(node.left, courseId);
         if (leftResult != null) {
             return leftResult;
         }
 
-        // 再查右子树
+        // Then search right subtree
         return searchByIdHelper(node.right, courseId);
     }
 
     /**
-     * 中序遍历获取所有课程（按名称排序）
+     * Inorder traversal to get all courses (sorted by name)
      */
     public List<Course> getAllCoursesSorted() {
         List<Course> courses = new ArrayList<>();
@@ -247,7 +247,7 @@ public class CourseAVLTree {
     }
 
     /**
-     * 按首字母查找所有课程
+     * Search all courses by first letter
      */
     public List<Course> searchByFirstLetter(char letter) {
         List<Course> results = new ArrayList<>();
@@ -263,12 +263,12 @@ public class CourseAVLTree {
 
         char firstChar = Character.toLowerCase(node.course.getCourseName().charAt(0));
         
-        // 如果首字母匹配，加入结果
+        // If first letter matches, add to results
         if (firstChar == letter) {
             results.add(node.course);
         }
 
-        // 利用AVL树的有序性进行剪枝
+        // Prune using AVL tree ordering
         if (letter <= firstChar) {
             searchByFirstLetterHelper(node.left, letter, results);
         }
@@ -278,7 +278,7 @@ public class CourseAVLTree {
     }
 
     /**
-     * 获取树中课程数量
+     * Get number of courses in tree
      */
     public int size() {
         return sizeHelper(root);
@@ -292,10 +292,9 @@ public class CourseAVLTree {
     }
 
     /**
-     * 检查树是否为空
+     * Check if tree is empty
      */
     public boolean isEmpty() {
         return root == null;
     }
 }
-

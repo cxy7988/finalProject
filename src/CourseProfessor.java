@@ -2,36 +2,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * CourseProfessor 类（关联类）
+ * CourseProfessor class (Association class)
  * ----------------------------------------------
- * 用于表示「某位教授教授某门课程」这一关系。
+ * Represents the relationship of "a professor teaching a course".
  *
- * 在 Course 与 Professor 的多对多关系中，
- * CourseProfessor 作为“关联类”，负责记录：
- *   - 哪位教授（professor）
- *   - 在教授哪门课程（course）
- *   - 在该课程上收到的所有评分（ratingList）
+ * In the many-to-many relationship between Course and Professor,
+ * CourseProfessor serves as an "association class", responsible for recording:
+ *   - Which professor (professor)
+ *   - Teaching which course (course)
+ *   - All ratings received for this course (ratingList)
  *
- * 每个 CourseProfessor 实例都对应一种
- * “教授 X 在课程 Y 上的授课关系”。
+ * Each CourseProfessor instance corresponds to a
+ * "Professor X teaching Course Y" relationship.
  */
 public class CourseProfessor {
 
-    /** 该教授所教授的课程对象 */
+    /** The course object taught by this professor */
     private Course course;
 
-    /** 授课的教授对象 */
+    /** The professor object */
     private Professor professor;
 
-    /** 学生对该教授在该课程上的所有评分 */
+    /** All student ratings for this professor in this course */
     private List<Rating> ratingList;
 
     /**
-     * 构造方法
-     * @param course    课程对象
-     * @param professor 教授对象
+     * Constructor
+     * @param course    course object
+     * @param professor professor object
      *
-     * 创建一个教授与课程的关联关系。
+     * Creates an association between professor and course.
      */
     public CourseProfessor(Course course, Professor professor) {
         this.course = course;
@@ -40,7 +40,7 @@ public class CourseProfessor {
     }
 
     /**
-     * 获取关联的课程对象
+     * Get associated course object
      * @return course
      */
     public Course getCourse() {
@@ -48,7 +48,7 @@ public class CourseProfessor {
     }
 
     /**
-     * 获取关联的教授对象
+     * Get associated professor object
      * @return professor
      */
     public Professor getProfessor() {
@@ -56,24 +56,24 @@ public class CourseProfessor {
     }
 
     /**
-     * 为该教授在该课程上的授课添加一条评分
-     * @param rating 评分对象
+     * Add a rating for this professor in this course
+     * @param rating rating object
      */
     public void addRating(Rating rating) {
         ratingList.add(rating);
     }
 
     /**
-     * 获取所有评分
-     * @return Rating 列表
+     * Get all ratings
+     * @return list of Rating
      */
     public List<Rating> getRatings() {
         return ratingList;
     }
 
     /**
-     * 计算该教授在该课程上的平均评分
-     * @return 平均分（若无评价则返回 0.0）
+     * Calculate average rating for this professor in this course
+     * @return average rating (returns 0.0 if no ratings)
      */
     public double getAverageRating() {
         if (ratingList.isEmpty()) return 0.0;
@@ -87,16 +87,14 @@ public class CourseProfessor {
     }
 
     /**
-     * 返回当前教授在本课程下的所有评价数量
+     * Return the count of all ratings for this professor in this course
      */
     public int getRatingCount() {
-        // ratingList 是存储所有评分的列表
-        // 如果没有评分，ratingList 可能为 empty，但不为 null（你应该在构造方法里初始化）
         return ratingList.size();
     }
 
     /**
-     * 返回易读的文本描述，格式如：
+     * Return readable text description, format:
      * "Alice teaches Java Programming (Avg Rating: 4.50)"
      */
     @Override

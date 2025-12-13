@@ -1,22 +1,22 @@
 /**
- * Rating类：表示一条评分记录
- * 包含评分分数和评论内容
+ * Rating class: Represents a rating record
+ * Contains rating score and comment content
  */
 public class Rating {
-    private double score;      // 评分（例如：0-5分）
-    private String comment;    // 评论内容
+    private double score;      // Rating (e.g., 0-5)
+    private String comment;    // Comment content
 
     /**
-     * 构造方法
-     * @param score 评分分数
-     * @param comment 评论内容
+     * Constructor
+     * @param score rating score
+     * @param comment comment content
      */
     public Rating(double score, String comment) {
         this.score = score;
         this.comment = comment;
     }
 
-    // Getter和Setter方法
+    // Getter and Setter methods
     public double getScore() {
         return score;
     }
@@ -38,4 +38,3 @@ public class Rating {
         return String.format("[%.1f] %s", score, comment);
     }
 }
-

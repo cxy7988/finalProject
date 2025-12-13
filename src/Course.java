@@ -2,18 +2,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Course类：表示一门课程
- * 维护课程基本信息和授课教授列表
+ * Course class: Represents a course
+ * Maintains course basic information and list of teaching professors
  */
 public class Course {
-    private String courseId;                            // 课程编号
-    private String courseName;                          // 课程名称
-    private List<CourseProfessor> professorList;        // 该课程的所有教授及其评分
+    private String courseId;                            // Course ID
+    private String courseName;                          // Course name
+    private List<CourseProfessor> professorList;        // All professors and their ratings for this course
 
     /**
-     * 构造方法
-     * @param courseId 课程编号
-     * @param courseName 课程名称
+     * Constructor
+     * @param courseId course ID
+     * @param courseName course name
      */
     public Course(String courseId, String courseName) {
         this.courseId = courseId;
@@ -42,29 +42,29 @@ public class Course {
     }
 
     /**
-     * 获取或创建CourseProfessor对象
-     * 如果该教授已经在列表中，返回现有对象；否则创建新对象并加入列表
-     * @param professor 教授对象
-     * @return CourseProfessor对象
+     * Get or create CourseProfessor object
+     * If the professor already exists in the list, return existing object; otherwise create new object and add to list
+     * @param professor professor object
+     * @return CourseProfessor object
      */
     public CourseProfessor getOrCreateCourseProfessor(Professor professor) {
-        // 查找是否已存在该教授
+        // Check if professor already exists
         for (CourseProfessor cp : professorList) {
             if (cp.getProfessor().getName().equals(professor.getName())) {
                 return cp;
             }
         }
 
-        // 不存在则创建新的
+        // Create new if not exists
         CourseProfessor newCp = new CourseProfessor(this, professor);
         professorList.add(newCp);
-        professor.addTeaching(newCp);  // 双向关联
+        professor.addTeaching(newCp);  // Bidirectional association
         return newCp;
     }
 
     /**
-     * 计算该课程的总体平均评分
-     * @return 平均评分
+     * Calculate overall average rating for this course
+     * @return average rating
      */
     public double getOverallAverageRating() {
         if (professorList.isEmpty()) {
@@ -92,4 +92,3 @@ public class Course {
                            getOverallAverageRating());
     }
 }
-

@@ -2,16 +2,16 @@ import java.io.*;
 import java.util.*;
 
 /**
- * RatingSystem类：系统核心类
- * 负责数据管理、查询、排序等核心功能
+ * RatingSystem class: Core system class
+ * Responsible for data management, queries, sorting and other core functions
  */
 public class RatingSystem {
-    private CourseAVLTree courseTree;                   // AVL树存储课程（按名称排序，快速查找）
-    private Map<String, Course> courseMap;              // 课程映射（按ID快速查找）
-    private Map<String, Professor> professorMap;        // 教授映射（快速查找）
+    private CourseAVLTree courseTree;                   // AVL tree for storing courses (sorted by name, fast lookup)
+    private Map<String, Course> courseMap;              // Course map (fast lookup by ID)
+    private Map<String, Professor> professorMap;        // Professor map (fast lookup)
 
     /**
-     * 构造方法
+     * Constructor
      */
     public RatingSystem() {
         this.courseTree = new CourseAVLTree();
@@ -20,9 +20,9 @@ public class RatingSystem {
     }
 
     /**
-     * 获取或创建教授对象
-     * @param professorName 教授姓名
-     * @return Professor对象
+     * Get or create professor object
+     * @param professorName professor name
+     * @return Professor object
      */
     private Professor getOrCreateProfessor(String professorName) {
         if (professorMap.containsKey(professorName)) {
@@ -35,10 +35,10 @@ public class RatingSystem {
     }
 
     /**
-     * 获取或创建课程对象
-     * @param courseId 课程编号
-     * @param courseName 课程名称
-     * @return Course对象
+     * Get or create course object
+     * @param courseId course ID
+     * @param courseName course name
+     * @return Course object
      */
     private Course getOrCreateCourse(String courseId, String courseName) {
         if (courseMap.containsKey(courseId)) {
@@ -52,12 +52,12 @@ public class RatingSystem {
     }
 
     /**
-     * 添加评分
-     * @param courseId 课程编号
-     * @param courseName 课程名称
-     * @param professorName 教授姓名
-     * @param score 评分
-     * @param comment 评论
+     * Add rating
+     * @param courseId course ID
+     * @param courseName course name
+     * @param professorName professor name
+     * @param score rating score
+     * @param comment comment
      */
     public void addRating(String courseId, String courseName, String professorName, 
                          double score, String comment) {
@@ -81,14 +81,14 @@ public class RatingSystem {
             return;
         }
         
-        // 获取或创建课程和教授
+        // Get or create course and professor
         Course course = getOrCreateCourse(courseId, courseName);
         Professor professor = getOrCreateProfessor(professorName);
 
-        // 获取或创建CourseProfessor关系
+        // Get or create CourseProfessor relationship
         CourseProfessor cp = course.getOrCreateCourseProfessor(professor);
 
-        // 添加评分
+        // Add rating
         Rating rating = new Rating(score, comment);
         cp.addRating(rating);
 
@@ -96,9 +96,9 @@ public class RatingSystem {
     }
 
     /**
-     * 从CSV文件加载数据
-     * 格式：courseId,courseName,professorName,rating,comment
-     * @param filename 文件名
+     * Load data from CSV file
+     * Format: courseId,courseName,professorName,rating,comment
+     * @param filename file name
      */
     public void loadFromFile(String filename) {
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
@@ -106,13 +106,13 @@ public class RatingSystem {
             boolean firstLine = true;
 
             while ((line = br.readLine()) != null) {
-                // 跳过表头
+                // Skip header
                 if (firstLine) {
                     firstLine = false;
                     continue;
                 }
 
-                String[] parts = line.split(",", 5);  // 限制分割为5部分，防止评论中的逗号影响
+                String[] parts = line.split(",", 5);  // Limit split to 5 parts to prevent commas in comments from affecting parsing
                 if (parts.length >= 5) {
                     String courseId = parts[0].trim();
                     String courseName = parts[1].trim();
@@ -135,15 +135,15 @@ public class RatingSystem {
     }
 
     /**
-     * 保存数据到CSV文件
-     * @param filename 文件名
+     * Save data to CSV file
+     * @param filename file name
      */
     public void saveToFile(String filename) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(filename))) {
-            // 写入表头
+            // Write header
             pw.println("courseId,courseName,professorName,rating,comment");
 
-            // 遍历所有课程（使用AVL树的中序遍历，按名称排序）
+            // Traverse all courses (using AVL tree inorder traversal, sorted by name)
             List<Course> courses = courseTree.getAllCoursesSorted();
             for (Course course : courses) {
                 for (CourseProfessor cp : course.getProfessorList()) {
@@ -165,38 +165,38 @@ public class RatingSystem {
     }
 
     /**
-     * AVL树查找：按课程名关键字搜索
-     * 利用AVL树的有序性进行优化查找
-     * @param keyword 关键字
-     * @return 匹配的课程列表
+     * AVL tree search: Search courses by name keyword
+     * Utilizes AVL tree ordering for optimized lookup
+     * @param keyword keyword
+     * @return list of matching courses
      */
     public List<Course> searchCoursesByName(String keyword) {
         return courseTree.searchByName(keyword);
     }
 
     /**
-     * HashMap查找：按课程ID精确查找（O(1)时间复杂度）
-     * @param courseId 课程编号
-     * @return 找到的课程，未找到返回null
+     * HashMap lookup: Search course by ID (O(1) time complexity)
+     * @param courseId course ID
+     * @return found course, null if not found
      */
     public Course searchCourseById(String courseId) {
         return courseMap.get(courseId);
     }
 
     /**
-     * 按教授姓名查找教授
-     * @param name 教授姓名
-     * @return Professor对象，未找到返回null
+     * Search professor by name
+     * @param name professor name
+     * @return Professor object, null if not found
      */
     public Professor searchProfessorByName(String name) {
         return professorMap.get(name);
     }
 
     /**
-     * 获取某门课程内教授的评分排名
-     * 使用选择排序，按平均评分从高到低排序
-     * @param courseId 课程编号
-     * @return 排序后的CourseProfessor列表
+     * Get professor ranking within a course
+     * Uses insertion sort, sorted by average rating from high to low
+     * @param courseId course ID
+     * @return sorted list of CourseProfessor
      */
     public List<CourseProfessor> getProfessorRankingInCourse(String courseId) {
         Course course = searchCourseById(courseId);
@@ -206,71 +206,71 @@ public class RatingSystem {
 
         List<CourseProfessor> professorList = new ArrayList<>(course.getProfessorList());
 
-        // 插入排序：按平均评分从高到低
+        // Insertion sort: by average rating from high to low
         insertionSortByRating(professorList);
 
         return professorList;
     }
 
-   /**
- * 插入排序：按 CourseProfessor 的平均评分从高到低排序
- */
-private void insertionSortByRating(List<CourseProfessor> list) {
-    for (int i = 1; i < list.size(); i++) {
+    /**
+     * Insertion sort: Sort CourseProfessor by average rating from high to low
+     */
+    private void insertionSortByRating(List<CourseProfessor> list) {
+        for (int i = 1; i < list.size(); i++) {
 
-        CourseProfessor key = list.get(i);
-        double keyRating = key.getAverageRating();
-        int j = i - 1;
+            CourseProfessor key = list.get(i);
+            double keyRating = key.getAverageRating();
+            int j = i - 1;
 
-        // 将评分更低的往右移动（高分在前）
-        while (j >= 0 && list.get(j).getAverageRating() < keyRating) {
-            list.set(j + 1, list.get(j));
-            j--;
+            // Move lower ratings to the right (higher ratings first)
+            while (j >= 0 && list.get(j).getAverageRating() < keyRating) {
+                list.set(j + 1, list.get(j));
+                j--;
+            }
+
+            list.set(j + 1, key);
         }
-
-        list.set(j + 1, key);
     }
-}
 
     /**
-     * 获取全局教授排名
-     * 按总体平均评分从高到低排序
-     * @return 排序后的教授列表
+     * Get overall professor ranking
+     * Sorted by overall average rating from high to low
+     * @return sorted list of professors
      */
     public List<Professor> getOverallProfessorRanking() {
         List<Professor> professorList = new ArrayList<>(professorMap.values());
 
-        // 插入排序：按总体平均评分从高到低
+        // Insertion sort: by overall average rating from high to low
         insertionSortProfessors(professorList);
         
         return professorList;
     }
 
     /**
-     * 插入排序算法实现（教授版本）
-     * 按Professor的总体平均评分从高到低排序
-     * @param list 待排序的列表
+     * Insertion sort algorithm implementation (Professor version)
+     * Sort professors by overall average rating from high to low
+     * @param list list to sort
      */
-private void insertionSortProfessors(List<Professor> list) {
-    for (int i = 1; i < list.size(); i++) {
+    private void insertionSortProfessors(List<Professor> list) {
+        for (int i = 1; i < list.size(); i++) {
 
-        Professor key = list.get(i);
-        double keyRating = key.getOverallAverageRating();
-        int j = i - 1;
+            Professor key = list.get(i);
+            double keyRating = key.getOverallAverageRating();
+            int j = i - 1;
 
-        // 高分在前 → 低分往右移
-        while (j >= 0 && list.get(j).getOverallAverageRating() < keyRating) {
-            list.set(j + 1, list.get(j));
-            j--;
+            // Higher ratings first, move lower ratings to the right
+            while (j >= 0 && list.get(j).getOverallAverageRating() < keyRating) {
+                list.set(j + 1, list.get(j));
+                j--;
+            }
+
+            list.set(j + 1, key);
         }
-
-        list.set(j + 1, key);
     }
-}
 
     /**
-     * 显示课程详细信息
-     * @param course 课程对象
+     * Display course details
+     * @param course course object
      */
     public void displayCourseDetails(Course course) {
         System.out.println("\n======== Course Details ========");
@@ -298,8 +298,8 @@ private void insertionSortProfessors(List<Professor> list) {
     }
 
     /**
-     * 显示教授详细信息
-     * @param professor 教授对象
+     * Display professor details
+     * @param professor professor object
      */
     public void displayProfessorDetails(Professor professor) {
         System.out.println("\n======== Professor Details ========");
@@ -335,25 +335,25 @@ private void insertionSortProfessors(List<Professor> list) {
     }
 
     /**
-     * 获取所有课程（按名称排序）
-     * @return 课程列表
+     * Get all courses (sorted by name)
+     * @return course list
      */
     public List<Course> getCourses() {
         return courseTree.getAllCoursesSorted();
     }
 
     /**
-     * 按首字母查找课程
-     * @param letter 首字母
-     * @return 匹配的课程列表
+     * Search courses by first letter
+     * @param letter first letter
+     * @return list of matching courses
      */
     public List<Course> searchCoursesByFirstLetter(char letter) {
         return courseTree.searchByFirstLetter(letter);
     }
 
     /**
-     * 获取课程总数
-     * @return 课程数量
+     * Get total course count
+     * @return course count
      */
     public int getCourseCount() {
         return courseTree.size();
@@ -363,4 +363,3 @@ private void insertionSortProfessors(List<Professor> list) {
         return professorMap;
     }
 }
-
